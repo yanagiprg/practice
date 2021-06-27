@@ -1,15 +1,51 @@
 <template>
   <div class="container">
     <div>
-      <Card />
+      <post
+        v-for="post in sortPostList"
+        :key="post.id"
+        :post="post"
+        @remove="removePost"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent, reactive, computed } from '@nuxtjs/composition-api'
+import { PostType } from '@/types/models'
+import Post from '@/components/Post.vue'
 
-export default Vue.extend({})
+interface State {
+  postList: PostType[]
+}
+
+export default defineComponent({
+  components: {
+    Post,
+  },
+
+  setup() {
+    const state = reactive<State>({
+      postList: [],
+    })
+
+    const sortPostList = computed(() =>
+      state.postList.sort((a, b) => {
+        return b.createdAt.getTime() - a.createdAt.getTime()
+      })
+    )
+
+    const removePost = (id: string) => {
+      state.postList = state.postList.filter((post) => post.id !== id)
+    }
+
+    return {
+      sortPostList,
+      removePost,
+    }
+  },
+})
 </script>
 
 <style>
