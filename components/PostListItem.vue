@@ -3,10 +3,8 @@
     <div class="max-w-sm rounded overflow-hidden shadow-lg">
       <img class="w-full" src="@/assets/img/the_xprmnt.png" alt="Mountain" />
       <div class="px-6 py-4">
-        <div class="font-bold text-xl mb-2">{{ post.title }}</div>
-        <p class="text-gray-700 text-base">
-          {{ post.content }}
-        </p>
+        <div class="font-bold text-xl mb-2"><slot /></div>
+        <p class="text-gray-700 text-base"><slot /></p>
       </div>
       <div class="px-6 pt-4 pb-2">
         <span
@@ -22,8 +20,9 @@
             mr-2
             mb-2
           "
-          >{{ date }}</span
+          >{{ post.title }}</span
         >
+        {{ post.content }}
         <button
           class="
             inline-block
@@ -53,7 +52,7 @@
             mr-2
             mb-2
           "
-          @click="remove"
+          @click="deletePost(post)"
         >
           Delete
         </button>
@@ -62,34 +61,42 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType } from '@vue/composition-api'
-import { PostType } from '@/types/models'
-
-export default defineComponent({
+<script>
+export default {
   props: {
-    post: {
-      type: Object as PropType<PostType>,
-      required: true,
-    },
-    
+    post: { type: Object, required: true },
   },
-  emits: ['remove'],
-  setup(props, context) {
-    const date = computed(() => {
-      if (!props.post) return
-      const { createdAt } = props.post
-      return `${createdAt.getFullYear()}/${
-        createdAt.getMonth() + 1
-      }/${createdAt.getDate()}`
-    })
-    const remove = () => {
-      context.emit('remove', props.post!.id)
-    }
+  data() {
     return {
-      date,
-      remove,
+      title: '',
+      content: '',
     }
   },
-})
+  methods: {
+    async deletePost(post) {
+      await this.$store.dispatch('post/deletePost', post.id)
+      await this.$store.dispatch('post/getPosts')
+    },
+  },
+}
+// <script lang="ts">
+// import { Component, Vue, Prop } from 'nuxt-property-decorator'
+// import { Post } from '@/types/models'
+// import { cloneDeep } from 'lodash'
+
+// @Component
+// export default class PostListItem extends Vue {
+//   @Prop({ default: () => {}, type: Object }) readonly: any
+//   propPost!: Post
+//   post: Post = {
+//     title: '',
+//     content: '',
+//     id: '',
+//   }
+
+//   created() {
+//     this.post = cloneDeep(this.propPost)
+//   }
+// }
+// <script>
 </script>

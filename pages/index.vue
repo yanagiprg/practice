@@ -1,6 +1,5 @@
-// MyTodo.vue
 <template>
-  <div></div>
+  <div>Index</div>
 </template>
 
 <script lang="ts"></script>

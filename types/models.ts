@@ -1,12 +1,5 @@
-export interface PostType {
+export interface Post {
+  id: string
   title: string
   content?: string
-  createdAt: Date
-  id?: string
-}
-
-export default interface PostListType {
-  title: string
-  id?: any
-  createdAt: Date
 }
