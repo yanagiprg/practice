@@ -1,0 +1,162 @@
+<template>
+  <div class="bg-indigo-700">
+    <div class="w-full max-w-xs">
+      <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div class="mb-4">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="username"
+          >
+            Title
+          </label>
+          <input
+            id="username"
+            v-model="title"
+            class="
+              shadow
+              appearance-none
+              border
+              rounded
+              w-full
+              py-2
+              px-3
+              text-gray-700
+              leading-tight
+              focus:outline-none
+              focus:shadow-outline
+            "
+            type="text"
+            placeholder="Title"
+          />
+        </div>
+        <div class="mb-6">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="password"
+          >
+            Content
+          </label>
+          <input
+            id="password"
+            v-model="content"
+            class="
+              shadow
+              appearance-none
+              border
+              rounded
+              w-full
+              py-2
+              px-3
+              text-gray-700
+              mb-3
+              leading-tight
+              focus:outline-none
+              focus:shadow-outline
+            "
+            type="text"
+            placeholder="Content"
+          />
+        </div>
+        <div class="flex items-center justify-between">
+          <button
+            class="
+              bg-blue-500
+              hover:bg-blue-700
+              text-white
+              font-bold
+              py-2
+              px-4
+              rounded
+              focus:outline-none
+              focus:shadow-outline
+            "
+            type="button"
+            @click="updatePost({ id, title, content })"
+          >
+            Update
+          </button>
+          <button
+            class="
+              bg-red-500
+              hover:bg-red-700
+              text-white
+              font-bold
+              py-2
+              px-4
+              rounded
+              focus:outline-none
+              focus:shadow-outline
+            "
+            type="button"
+            @click="resetForm"
+          >
+            Reset
+          </button>
+          <button
+            class="
+              bg-white
+              hover:bg-gray-300
+              text-red-500
+              border border-red-500
+              font-bold
+              py-2
+              px-4
+              rounded
+              focus:outline-none
+              focus:shadow-outline
+            "
+            type="button"
+            @click="deletePost"
+          >
+            Delete
+          </button>
+        </div>
+      </form>
+      <p class="text-center text-gray-500 text-xs">
+        &copy;2020 Acme Corp. All rights reserved.
+      </p>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    propId: {
+      type: String,
+      required: true,
+    },
+    propTitle: {
+      type: String,
+      required: true,
+    },
+    propContent: {
+      type: String,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      id: this.propId,
+      title: this.propTitle,
+      content: this.propContent,
+    }
+  },
+  methods: {
+    async updatePost(payload) {
+      await this.$store.dispatch('post/updatePost', payload)
+      await this.$store.dispatch('post/getPosts')
+      this.$router.push('/post/')
+    },
+    async deletePost() {
+      await this.$store.dispatch('post/deletePost', this.$route.params.postId)
+      await this.$store.dispatch('post/getPosts')
+      this.$router.push('/post/')
+    },
+    resetForm() {
+      this.title = this.propTitle
+      this.content = this.propContent
+    },
+  },
+}
+</script>

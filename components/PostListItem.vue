@@ -36,6 +36,7 @@
             mr-2
             mb-2
           "
+          @click="redirectPost(post.id)"
         >
           Edit
         </button>
@@ -52,7 +53,7 @@
             mr-2
             mb-2
           "
-          @click="deletePost(post)"
+          @click="deletePost(post.id)"
         >
           Delete
         </button>
@@ -72,9 +73,15 @@ export default {
       content: '',
     }
   },
+  mounted() {
+    this.$store.dispatch('post/getPosts')
+  },
   methods: {
-    async deletePost(post) {
-      await this.$store.dispatch('post/deletePost', post.id)
+    redirectPost(id) {
+      this.$router.push(`/post/${id}`)
+    },
+    async deletePost(id) {
+      await this.$store.dispatch('post/deletePost', id)
       await this.$store.dispatch('post/getPosts')
     },
   },

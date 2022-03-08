@@ -4,6 +4,7 @@ import firebase from '@/plugins/firebase'
 import 'firebase/firestore'
 
 const db = firebase.firestore()
+const timestamp = firebase.firestore.FieldValue.serverTimestamp()
 
 export const state = () => ({
   posts: [],
@@ -11,7 +12,6 @@ export const state = () => ({
 
 export const getters = {
   posts(state) {
-    console.log(state.posts, 'state.posts')
     return state.posts
   },
 }
@@ -32,14 +32,10 @@ export const actions = {
     snapShot.forEach((doc) => {
       postList.push(doc.data())
     })
-    console.log(snapShot, 'postList')
     commit('setPosts', postList)
   },
   async addPost({}, payload) {
-    const timestamp = firebase.firestore.FieldValue.serverTimestamp()
-    await console.log('addPost', payload)
     const res = await db.collection('posts').add({})
-    console.log(db.collection('posts').doc(res.id), 'aaa')
     await db.collection('posts').doc(res.id).set({
       id: res.id,
       title: payload.title,
@@ -50,5 +46,16 @@ export const actions = {
   },
   async deletePost({}, id) {
     await db.collection('posts').doc(id).delete()
+  },
+  async editPost({}, id) {
+    const snapShot = await db.collection('posts').doc(id).get()
+    return snapShot.data()
+  },
+  async updatePost({}, payload) {
+    await db.collection('posts').doc(payload.id).update({
+      title: payload.title,
+      content: payload.content,
+      updatedAt: timestamp,
+    })
   },
 }

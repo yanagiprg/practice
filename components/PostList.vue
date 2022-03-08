@@ -4,6 +4,7 @@
       v-for="post in $store.getters['post/posts']"
       :key="post.id"
       :post="post"
+      @edit="$emit('edit-post')"
       @delete="$emit('delete-post')"
     />
   </div>
