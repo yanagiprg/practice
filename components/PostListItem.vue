@@ -46,10 +46,12 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue, { PropOptions } from 'vue'
+import { Post } from '@/types/models'
+export default Vue.extend({
   props: {
-    post: { type: Object, required: true },
+    post: { type: Object, required: true } as PropOptions<Post>,
   },
   data() {
     return {
@@ -58,38 +60,18 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('post/getPosts')
+    this.$store.dispatch('post/fetchPostList')
   },
   methods: {
-    redirectPost(id) {
+    redirectPost(id: string) {
       this.$router.push(`/post/${id}`)
     },
-    async deletePost(id) {
+    async deletePost(id: string) {
       await this.$store.dispatch('post/deletePost', id)
-      await this.$store.dispatch('post/getPosts')
+      await this.$store.dispatch('post/fetchPostList')
     },
   },
-}
-// <script lang="ts">
-// import { Component, Vue, Prop } from 'nuxt-property-decorator'
-// import { Post } from '@/types/models'
-// import { cloneDeep } from 'lodash'
-
-// @Component
-// export default class PostListItem extends Vue {
-//   @Prop({ default: () => {}, type: Object }) readonly: any
-//   propPost!: Post
-//   post: Post = {
-//     title: '',
-//     content: '',
-//     id: '',
-//   }
-
-//   created() {
-//     this.post = cloneDeep(this.propPost)
-//   }
-// }
-// <script>
+})
 </script>
 
 <style scoped>

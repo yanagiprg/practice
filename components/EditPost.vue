@@ -119,8 +119,11 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue'
+import { Post } from '@/types/models'
+
+export default Vue.extend({
   props: {
     propId: {
       type: String,
@@ -143,14 +146,14 @@ export default {
     }
   },
   methods: {
-    async updatePost(payload) {
+    async updatePost(payload: Post) {
       await this.$store.dispatch('post/updatePost', payload)
-      await this.$store.dispatch('post/getPosts')
+      await this.$store.dispatch('post/fetchPostList')
       this.$router.push('/post/')
     },
     async deletePost() {
       await this.$store.dispatch('post/deletePost', this.$route.params.postId)
-      await this.$store.dispatch('post/getPosts')
+      await this.$store.dispatch('post/fetchPostList')
       this.$router.push('/post/')
     },
     resetForm() {
@@ -158,5 +161,5 @@ export default {
       this.content = this.propContent
     },
   },
-}
+})
 </script>

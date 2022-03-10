@@ -2,37 +2,43 @@
 import _ from 'lodash'
 import firebase from '@/plugins/firebase'
 import 'firebase/firestore'
+import { Post } from '@/types/models'
+import { S, G, M, A } from '@/store/post/type'
+import type { Getters, Mutations, Actions } from 'vuex'
 
 const db = firebase.firestore()
 const timestamp = firebase.firestore.FieldValue.serverTimestamp()
 
-export const state = () => ({
+export const initialState: S = {
   posts: [],
-})
+}
 
-export const getters = {
-  posts(state) {
+export const state = (): S => Object.assign({}, initialState)
+
+export const getters: Getters<S, G> = {
+  getPostList(state: S) {
     return state.posts
   },
 }
 
-export const mutations = {
-  setPosts(state, posts) {
+export const mutations: Mutations<S, M> = {
+  setPostList(state: S, posts: Post[]) {
     state.posts = _.cloneDeep(posts)
   },
 }
 
-export const actions = {
-  async getPosts({ commit }) {
-    const postList = []
+export const actions: Actions<S, A, G, M> = {
+  async fetchPostList({ commit }) {
+    const postList: Post[] = []
     const snapShot = await db
       .collection('posts')
       .orderBy('updatedAt', 'desc')
       .get()
     snapShot.forEach((doc) => {
-      postList.push(doc.data())
+      const data = doc.data() as Post
+      postList.push(data)
     })
-    commit('setPosts', postList)
+    commit('setPostList', postList)
   },
   async addPost({}, payload) {
     const res = await db.collection('posts').add({})

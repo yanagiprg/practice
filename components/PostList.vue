@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <PostListItem
-      v-for="post in $store.getters['post/posts']"
+      v-for="post in $store.getters['post/getPostList']"
       :key="post.id"
       :post="post"
       @edit="$emit('edit-post')"
@@ -10,10 +10,11 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
   mounted() {
-    this.$store.dispatch('post/getPosts')
+    this.$store.dispatch('post/fetchPostList')
   },
-}
+})
 </script>

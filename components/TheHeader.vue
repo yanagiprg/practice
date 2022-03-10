@@ -3,7 +3,7 @@
     class="
       header-container
       flex
-      justify-between
+      justify-end
       items-center
       mx-0
       px-4
@@ -11,6 +11,7 @@
       bg-white
       w-screen
       z-50
+      shadow-lg
     "
   >
     <nuxt-link
@@ -23,6 +24,7 @@
         hover:text-white
         py-2
         px-4
+        mr-4
         border border-blue-500
         hover:border-transparent
         rounded
@@ -40,6 +42,7 @@
         hover:text-white
         py-2
         px-4
+        mr-4
         border border-red-500
         hover:border-transparent
         rounded

@@ -101,8 +101,11 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue'
+import { Post } from '@/types/models'
+
+export default Vue.extend({
   data() {
     return {
       title: '',
@@ -110,9 +113,9 @@ export default {
     }
   },
   methods: {
-    async addPost(payload) {
+    async addPost(payload: Post) {
       await this.$store.dispatch('post/addPost', payload)
-      await this.$store.dispatch('post/getPosts')
+      await this.$store.dispatch('post/fetchPostList')
       this.resetForm()
       this.$router.push('/post/')
     },
@@ -121,5 +124,5 @@ export default {
       this.content = ''
     },
   },
-}
+})
 </script>
