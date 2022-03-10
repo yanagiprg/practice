@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="w-full">
     <PostListItem
       v-for="post in $store.getters['post/posts']"
       :key="post.id"
